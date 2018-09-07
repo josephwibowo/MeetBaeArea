@@ -18,6 +18,7 @@ services:
         environment:
             - LOAD_EX=n
             - EXECUTOR=Local
+            - FERNET_KEY=${FERNET_KEY}
         volumes:
             - ./dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
@@ -40,6 +41,7 @@ services:
             - LOAD_EX=n
             - EXECUTOR=Local
             - AIRFLOW_CONN_MEETUP=postgres://${USER}:${PW}@${HOST}:${PORT}/${DB}
+            - FERNET_KEY=${FERNET_KEY}
         volumes:
             - ./dags:/usr/local/airflow/dags
         command: scheduler
