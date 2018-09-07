@@ -11,7 +11,7 @@ services:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: my/airflow
+        image: josephwibowo1/meetupairflow
         restart: unless-stopped
         depends_on:
             - postgres
@@ -32,7 +32,7 @@ services:
             retries: 3
 
     scheduler:
-        image: my/airflow
+        image: josephwibowo1/meetupairflow
         restart: unless-stopped
         depends_on:
             - webserver
