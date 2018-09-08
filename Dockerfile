@@ -42,6 +42,7 @@ RUN set -ex \
         python3-pip \
         python3-requests \
         apt-utils \
+        vim-tiny \
         curl \
         rsync \
         netcat \
