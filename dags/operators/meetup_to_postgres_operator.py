@@ -33,13 +33,13 @@ class MeetupToPostgresOperator(BaseOperator):
 
     def execute(self, context):
         m = Meetup()
+        EVENT_KWARGS['no_earlier_than'] = self.start
+        EVENT_KWARGS['no_later_than'] = self.end
         # Get all Groups
         all_groups = m.get_groups(**GROUP_KWARGS)
         with self.db_session() as db:
             for group_obj in all_groups:
                 for group in group_obj.results:
-                    time.sleep(0.5)
-                    EVENT_KWARGS['no_earlier_than'] = self.start
-                    EVENT_KWARGS['no_later_than'] = self.end
+                    time.sleep(0.15)
                     group.get_events(m, **EVENT_KWARGS)
             load_groups(all_groups, db, self.start)

@@ -56,6 +56,8 @@ class MeetupHTTPErrorProcessor(HTTPErrorProcessor):
                 raise ClientException(error_json)
 
 class Meetup:
+    maxtries = 3
+    delay = 10
     opener = build_opener(MeetupHTTPErrorProcessor)
     def __init__(self):
         with open(os.getcwd() + '/dags/meetup/config.json') as f:
@@ -75,8 +77,15 @@ class Meetup:
             url = API_BASE_URL + uri + '/' + "?" + args
         else:
             url = uri + '&key=' + self.key
-
-        response = self.opener.open(url)
+        n = 0
+        while n < self.maxtries:
+            try:
+                response = self.opener.open(url)
+            except:
+                n += 1
+                time.sleep(self.delay)
+            else:
+                break
         json_response = parse_json(response.read())
         headers = response.info()
         return json_response, headers
@@ -84,7 +93,15 @@ class Meetup:
     def _fetch_events(self, urlname, uri, **url_args):
         args = self.args_str(url_args)
         url = API_BASE_URL + uri.format(quote_plus(urlname)) + '/' + "?" + args
-        response = self.opener.open(url)
+        n = 0
+        while n < self.maxtries:
+            try:
+                response = self.opener.open(url)
+            except:
+                n += 1
+                time.sleep(self.delay)
+            else:
+                break
         json_response = parse_json(response.read())
         headers = response.info()
         return json_response, headers
@@ -100,7 +117,7 @@ class Meetup:
         if headers['Link']:
             link_rel = headers['Link'].split('rel=')[-1].replace('"', '')
             while link_rel=='next':
-                time.sleep(0.5)
+                time.sleep(0.15)
                 link = headers['Link'].split('>')[0].replace('<', '')
                 json_r, headers = self._fetch_groups(link, paginate=True)
                 link_rel = headers['Link'].split('rel=')[-1].replace('"', '')
@@ -118,7 +135,7 @@ class Meetup:
             first_event_id = Events.results[0].id
 
         while len(Events.results) == 200:
-            time.sleep(0.5)
+            time.sleep(0.15)
             last_event = Events.results[-1]
             local_date = str(datetime.datetime.strptime(last_event.local_date, '%Y-%m-%d').date() + datetime.timedelta(days=1))
             iso_date = '{}T00:00:00.000'.format(local_date)
