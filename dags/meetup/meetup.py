@@ -78,14 +78,15 @@ class Meetup:
         else:
             url = uri + '&key=' + self.key
         n = 0
-        while n < self.maxtries:
-            try:
-                response = self.opener.open(url)
-            except:
-                n += 1
-                time.sleep(self.delay)
-            else:
-                break
+        response = self.opener.open(url)
+        # while n < self.maxtries:
+        #     try:
+        #         response = self.opener.open(url)
+        #     except:
+        #         n += 1
+        #         time.sleep(self.delay)
+        #     else:
+        #         break
         json_response = parse_json(response.read())
         headers = response.info()
         return json_response, headers
