@@ -78,15 +78,14 @@ class Meetup:
         else:
             url = uri + '&key=' + self.key
         n = 0
-        response = self.opener.open(url)
-        # while n < self.maxtries:
-        #     try:
-        #         response = self.opener.open(url)
-        #     except:
-        #         n += 1
-        #         time.sleep(self.delay)
-        #     else:
-        #         break
+        while n < self.maxtries:
+            try:
+                response = self.opener.open(url)
+            except:
+                n += 1
+                time.sleep(self.delay)
+            else:
+                break
         json_response = parse_json(response.read())
         headers = response.info()
         return json_response, headers
@@ -118,7 +117,7 @@ class Meetup:
         if headers['Link']:
             link_rel = headers['Link'].split('rel=')[-1].replace('"', '')
             while link_rel=='next':
-                time.sleep(0.25)
+                time.sleep(0.4)
                 link = headers['Link'].split('>')[0].replace('<', '')
                 json_r, headers = self._fetch_groups(link, paginate=True)
                 link_rel = headers['Link'].split('rel=')[-1].replace('"', '')
@@ -136,7 +135,7 @@ class Meetup:
             first_event_id = Events.results[0].id
 
         while len(Events.results) == 200:
-            time.sleep(0.25)
+            time.sleep(0.4)
             last_event = Events.results[-1]
             local_date = str(datetime.datetime.strptime(last_event.local_date, '%Y-%m-%d').date() + datetime.timedelta(days=1))
             iso_date = '{}T00:00:00.000'.format(local_date)

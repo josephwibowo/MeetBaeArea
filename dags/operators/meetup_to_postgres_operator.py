@@ -40,6 +40,6 @@ class MeetupToPostgresOperator(BaseOperator):
         with self.db_session() as db:
             for group_obj in all_groups:
                 for group in group_obj.results:
-                    time.sleep(0.25)
+                    time.sleep(0.4)
                     group.get_events(m, **EVENT_KWARGS)
             load_groups(all_groups, db, self.start)
