@@ -215,15 +215,3 @@ class UnauthorizedError(ClientException):
 
 class BadRequestError(ClientException):
     pass;
-
-
-# DONE: Hit API for all Groups/Events raw data
-    # Write script to validate group does not exist in database
-        # Call get groups, then for each group, get or create
-    # Write script to add new events since the most recent event
-    # Write script to transform raw data and extract json data
-        # category (DONE), topics (DONE)
-        # fee (DONE), venue (DONE)
-# TO DO:
-    # Create a set group?
-    # Create web app dashboard
